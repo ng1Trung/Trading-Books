@@ -1,15 +1,14 @@
-import HeaderLayout from '../DefaultLayout/Header'
-import FooterLayout from '../DefaultLayout/Footer'
+import { constants } from '~/components/Layouts'
+import HeaderLayout from '~/components/Layouts/DefaultLayout/Header'
+import FooterLayout from '~/components/Layouts/DefaultLayout/Footer'
 
 function NoSidebarLayout({ children }) {
     return (
-        <>
+        <constants.Layout style={{ minHeight: '100vh' }}>
             <HeaderLayout />
-            <div className="container">
-                <div className="content">{children}</div>
-            </div>
+            <constants.Content style={{ width: 1200, margin: '64px auto 10px' }}>{children}</constants.Content>
             <FooterLayout />
-        </>
+        </constants.Layout>
     )
 }
 

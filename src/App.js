@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { Fragment } from 'react'
-
-import { publicRoutes } from '~/routes'
-import DefaultLayout from '~/components/Layouts/DefaultLayout'
+import 'antd/dist/antd.min.css'
+import publicRoutes from '~/routes'
+import DefaultLayout from '~/components/Layouts/NoSidebarLayout'
 
 function App() {
     return (
@@ -22,7 +22,7 @@ function App() {
                                 path={route.path}
                                 element={
                                     <Layout>
-                                        <Page />
+                                        <Page /> {/*children of layout*/}
                                     </Layout>
                                 }
                                 key={index}

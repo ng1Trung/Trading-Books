@@ -1,0 +1,8 @@
+@import '~slick-carousel/slick/slick';
+@import '~slick-carousel/slick/slick-theme';
+
+.ant-carousel .slick-arrow::before {
+    font-size: 24px;
+    font-family: 'slick';
+    color: #f0e3e1;
+}
