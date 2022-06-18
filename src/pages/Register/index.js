@@ -1,6 +1,8 @@
+import { useState, useRef } from 'react'
+
 import { constants } from '~/components/Layouts'
 import styles from '~/components/Layouts/Layouts.module.scss'
-
+import { handleCreateUserApi } from '~/services/userServices'
 function RegisterPage() {
     const formItemLayout = {
         labelCol: {
@@ -20,20 +22,87 @@ function RegisterPage() {
             },
         },
     }
+    const inputName = useRef()
 
-    // const tailFormItemLayout = {
-    //     wrapperCol: {
-    //         xs: {
-    //             span: 24,
-    //             offset: 0,
-    //         },
-    //         sm: {
-    //             span: 16,
-    //             offset: 8,
-    //         },
-    //     },
-    // }
+    const [inputs, setInputs] = useState({
+        fullName: '',
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        address: '',
+        phoneNumber: '',
+        gender: '',
+        birthDay: '',
+        favoriteTypes: '',
+    })
 
+    const handleInputsChange = (event) => {
+        const value = event.target.value
+        setInputs((prev) => ({ ...prev, [inputName.current.input.name]: value }))
+    }
+
+    const handleSelectChange = (value) => {
+        return (inputs.gender = value)
+    }
+
+    const checkValidate = () => {
+        let isValid = true
+        const inputsName = [
+            'fullName',
+            'username',
+            'email',
+            'password',
+            'confirmPassword',
+            'address',
+            'phoneNumber',
+            'gender',
+            'birthDay',
+            'favoriteTypes',
+        ]
+        for (let i = 0; i < inputsName.length; i++) {
+            // console.log(inputs[inputsName[i]])
+            if (!inputs[inputsName[i]]) {
+                isValid = false
+                constants.message.warning('Missing parameter ' + inputsName[i])
+                // console.log('Missing parameter ' + inputsName[i])
+                break
+            }
+        }
+        return isValid
+    }
+
+    const handleCreateUser = async () => {
+        try {
+            let isValid = checkValidate()
+            if (isValid) {
+                const userData = await handleCreateUserApi(inputs)
+                if (userData && userData.errorCode !== 0) {
+                    constants.message.warning(userData.data.message)
+                    // console.log(inputs.email)
+                    // console.log(userData.data.message)
+                }
+                if (userData && userData.errorCode === 0) {
+                    setInputs({
+                        fullName: inputs.fullName,
+                        username: inputs.username,
+                        email: inputs.email,
+                        password: inputs.password,
+                        confirmPassword: inputs.confirmPassword,
+                        address: inputs.address,
+                        phoneNumber: inputs.phoneNumber,
+                        gender: inputs.gender,
+                        birthDay: inputs.birthDay,
+                        favoriteTypes: inputs.favoriteTypes,
+                    })
+                    constants.message.success(userData.data.message)
+                    // console.log(userData.data.message)
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <div className={styles.container}>
             <constants.Card
@@ -53,7 +122,7 @@ function RegisterPage() {
                 <constants.Form {...formItemLayout} size="large" name="register" scrollToFirstError labelAlign="left">
                     <constants.Form.Item
                         name="fullName"
-                        label="Full name"
+                        label="Họ tên"
                         rules={[
                             {
                                 type: 'string',
@@ -66,7 +135,12 @@ function RegisterPage() {
                             },
                         ]}
                     >
-                        <constants.Input />
+                        <constants.Input
+                            onChange={handleInputsChange}
+                            name="fullName"
+                            ref={inputName}
+                            value={inputs.fullName}
+                        />
                     </constants.Form.Item>
                     <constants.Form.Item
                         name="username"
@@ -82,7 +156,12 @@ function RegisterPage() {
                             },
                         ]}
                     >
-                        <constants.Input />
+                        <constants.Input
+                            onChange={handleInputsChange}
+                            name="username"
+                            ref={inputName}
+                            value={inputs.username}
+                        />
                     </constants.Form.Item>
                     <constants.Form.Item
                         name="email"
@@ -98,11 +177,16 @@ function RegisterPage() {
                             },
                         ]}
                     >
-                        <constants.Input />
+                        <constants.Input
+                            onChange={handleInputsChange}
+                            name="email"
+                            ref={inputName}
+                            value={inputs.email}
+                        />
                     </constants.Form.Item>
                     <constants.Form.Item
                         name="password"
-                        label="Password"
+                        label="Mật khẩu"
                         rules={[
                             {
                                 required: true,
@@ -110,11 +194,16 @@ function RegisterPage() {
                             },
                         ]}
                     >
-                        <constants.Input.Password />
+                        <constants.Input.Password
+                            onChange={handleInputsChange}
+                            name="password"
+                            ref={inputName}
+                            value={inputs.password}
+                        />
                     </constants.Form.Item>
                     <constants.Form.Item
                         name="confirmPassword"
-                        label="Confirm Password"
+                        label="Nhập lại mật khẩu"
                         dependencies={['password']}
                         rules={[
                             {
@@ -132,19 +221,29 @@ function RegisterPage() {
                             }),
                         ]}
                     >
-                        <constants.Input.Password />
+                        <constants.Input.Password
+                            onChange={handleInputsChange}
+                            name="confirmPassword"
+                            ref={inputName}
+                            value={inputs.confirmPassword}
+                        />
                     </constants.Form.Item>
                     <constants.Form.Item
                         name="address"
-                        label="Address"
-                        tooltip="City or detail"
+                        label="Địa chỉ"
+                        tooltip="Thanh phố / Tỉnh thành"
                         rules={[{ required: true, message: 'Please input your address!' }]}
                     >
-                        <constants.Input />
+                        <constants.Input
+                            onChange={handleInputsChange}
+                            name="address"
+                            ref={inputName}
+                            value={inputs.address}
+                        />
                     </constants.Form.Item>
                     <constants.Form.Item
                         name="phoneNumber"
-                        label="Phone number"
+                        label="Số điện thoại"
                         rules={[
                             {
                                 required: true,
@@ -152,11 +251,17 @@ function RegisterPage() {
                             },
                         ]}
                     >
-                        <constants.Input addonBefore="+84" />
+                        <constants.Input
+                            addonBefore="+84"
+                            onChange={handleInputsChange}
+                            name="phoneNumber"
+                            ref={inputName}
+                            value={inputs.phoneNumber}
+                        />
                     </constants.Form.Item>
                     <constants.Form.Item
                         name="gender"
-                        label="Gender"
+                        label="Giới tính"
                         rules={[
                             {
                                 required: true,
@@ -164,15 +269,18 @@ function RegisterPage() {
                             },
                         ]}
                     >
-                        <constants.Select placeholder="Select your gender">
-                            <constants.Option value="male">Male</constants.Option>
-                            <constants.Option value="female">Female</constants.Option>
-                            <constants.Option value="other">Other</constants.Option>
+                        <constants.Select placeholder="Chọn giới tính" onChange={handleSelectChange}>
+                            <constants.Option value="0" ref={inputName}>
+                                Nam
+                            </constants.Option>
+                            <constants.Option value="1" ref={inputName}>
+                                Nữ
+                            </constants.Option>
                         </constants.Select>
                     </constants.Form.Item>
                     <constants.Form.Item
                         name="birthDay"
-                        label="Date of birth"
+                        label="Ngày/tháng/năm sinh"
                         tooltip="DD/MM/YYYY"
                         rules={[
                             {
@@ -181,30 +289,45 @@ function RegisterPage() {
                             },
                         ]}
                     >
-                        <constants.Input />
+                        <constants.Input
+                            name="birthDay"
+                            ref={inputName}
+                            onChange={handleInputsChange}
+                            value={inputs.birthDay}
+                        />
                     </constants.Form.Item>
                     <constants.Form.Item
-                        name="favoriteBook"
-                        label="Favorite types of books"
-                        tooltip="DD/MM/YYYY"
+                        name="favoriteTypes"
+                        label="Thể loại sách yêu thích"
+                        tooltip="Trinh thám, Khoa học viễn tưởng ..."
                         rules={[
                             {
                                 required: false,
                             },
                         ]}
                     >
-                        <constants.Input />
+                        <constants.Input
+                            onChange={handleInputsChange}
+                            name="favoriteTypes"
+                            ref={inputName}
+                            value={inputs.favoriteTypes}
+                        />
                     </constants.Form.Item>
                     <constants.Form.Item>
                         <constants.Row>
                             <constants.Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
                                 <constants.Button type="link" href="/login" shape="round">
-                                    Log In
+                                    Đăng nhập
                                 </constants.Button>
                             </constants.Col>
                             <constants.Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-                                <constants.Button type="primary" shape="round" htmlType="submit">
-                                    Register
+                                <constants.Button
+                                    type="primary"
+                                    shape="round"
+                                    htmlType="submit"
+                                    onClick={handleCreateUser}
+                                >
+                                    Đăng ký
                                 </constants.Button>
                             </constants.Col>
                         </constants.Row>

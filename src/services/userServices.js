@@ -3,18 +3,20 @@ const request = axios.create({
     baseURL: 'http://localhost:8080/api/',
 })
 
-const post = async (path, options = {}) => {
-    const response = await request.post(path, options)
-    return response.data
-}
+// const post = async (path, options = {}) => {
+//     const response = await request.post(path, options)
+//     return response.data
+// }
 const handleLoginApi = async (email, password) => {
-    return await post('login', { email, password })
-        .then(function (response) {
-            return response
-        })
-        .catch(function (error) {
-            return error.response.data.errorMessage
-        })
+    return await request.post('login', { email, password })
 }
 
-export { handleLoginApi }
+const handleGetUserApi = async (userId) => {
+    return await request.get(`/user/get-users?id=${userId}`)
+}
+
+const handleCreateUserApi = async (data) => {
+    return await request.post('/user/create-user', data)
+}
+
+export { handleLoginApi, handleGetUserApi, handleCreateUserApi }

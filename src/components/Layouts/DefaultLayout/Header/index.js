@@ -25,23 +25,12 @@ function HeaderLayout() {
                 <constants.Col style={{ marginBottom: -24 }}>
                     <constants.Search size="large" allowClear style={{ width: 400 }} placeholder="input search text" />
                 </constants.Col>
-                {/* account: when logged */}
+                {/* account */}
                 <constants.Col style={{ display: 'block' }}>
                     <constants.Space size="middle">
                         <constants.Avatar size="large" src="https://joeschmoe.io/api/v1/random" />
                         <constants.MessageOutlined style={{ fontSize: 30 }} />
                         <constants.BellOutlined style={{ fontSize: 30 }} />
-                    </constants.Space>
-                </constants.Col>
-                {/* account: when unlogged */}
-                <constants.Col style={{ display: 'none' }}>
-                    <constants.Space size="middle">
-                        <constants.Button size="large" shape="round" style={{ color: '#333' }} ghost>
-                            <constants.Link href="/register">Đăng ký</constants.Link>
-                        </constants.Button>
-                        <constants.Button size="large" shape="round" style={{ color: '#333' }} ghost>
-                            <constants.Link href="/login">Đăng nhập</constants.Link>
-                        </constants.Button>
                     </constants.Space>
                 </constants.Col>
             </constants.Row>

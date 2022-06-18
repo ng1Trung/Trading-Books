@@ -1,7 +1,9 @@
 import { useState } from 'react'
+
 import { constants } from '~/components/Layouts'
 import styles from '~/components/Layouts/Layouts.module.scss'
 import { handleLoginApi } from '~/services/userServices'
+
 function LogInPage() {
     const [inputs, setInputs] = useState({
         email: '',
@@ -12,6 +14,7 @@ function LogInPage() {
     const handleInputs = (event) => {
         const value = event.target.value
         setInputs((prev) => ({ ...prev, [event.target.name]: value }))
+        // console.log(inputs)
     }
 
     const handleLogin = async () => {
@@ -19,12 +22,11 @@ function LogInPage() {
         try {
             const userData = await handleLoginApi(inputs.email, inputs.password)
             if (userData && userData.errorCode !== 0) {
-                setErrorMessage(userData.message)
+                constants.message.warning(userData.message)
             }
             if (userData && userData.errorCode === 0) {
                 // setErrorMessage(userData.message)
-                // return <constants.Alert message="Login success!" type="success" />
-                return constants.message.success(userData.message)
+                constants.message.success(userData.message)
             }
             // console.log(userData.message)
         } catch (error) {
